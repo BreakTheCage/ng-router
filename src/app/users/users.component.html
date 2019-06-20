@@ -2,6 +2,9 @@
   <div class="col-xs-12 col-sm-4">
     <div class="list-group">
       <a
+        [routerLink] = "['/users', user.id,user.name]"
+        [queryParams]="{allowEdit:'1'}"
+        fragment="loading"
         href="#"
         class="list-group-item"
         *ngFor="let user of users">
@@ -14,5 +17,4 @@
   </div>
 </div>
 <router-outlet></router-outlet>
-
 

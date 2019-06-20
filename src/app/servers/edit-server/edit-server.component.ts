@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ServersService } from '../servers.service';
 
@@ -9,19 +10,21 @@ import { ServersService } from '../servers.service';
   styleUrls: ['./edit-server.component.css']
 })
 export class EditServerComponent implements OnInit {
+  paramSubscription: Subscription;
+  queryParamSubscription: Subscription;
   server: {id: number, name: string, status: string};
   serverName = '';
   serverStatus = '';
 
-  constructor(private serversService: ServersService, private activatedRout: ActivatedRoute) { }
+  constructor(private serversService: ServersService, 
+              private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    console.log(this.activatedRout.snapshot.queryParams);
-    console.log(this.activatedRout.snapshot.fragment);
-    
-    this.server = this.serversService.getServer(1);
-    this.serverName = this.server.name;
-    this.serverStatus = this.server.status;
+    console.log(this.activatedRoute.snapshot.queryParams);
+    console.log(this.activatedRoute.snapshot.fragment);
+
+    this.activatedRoute.queryParams.subscribe();
+    this.activatedRoute.fragment.subscribe();
   }
 
   onUpdateServer() {
@@ -29,3 +32,29 @@ export class EditServerComponent implements OnInit {
   }
 
 }
+
+//=======
+//http://localhost:4200/servers/5/edit?allowEdit=1#loading
+
+//=======
+//routing by navigation method: more inside method
+// this.router.navigate(['servers', id, 'edit'], {relativeTo: this.activatedRoute, queryParams: {'allowEdit': '1'}, fragment: 'loading'})
+// //get active route parameters, query parameters, fragment
+// this.activatedRoute.snapshot.params['id']
+// this.activatedRoute.snapshot.queryParams
+// this.activatedRoute.snapshot.fragment
+// //get active route parameters with observeble subscription
+
+// paramSubscription: Subscription;
+// this.paramSubscription = this.activatedRoute.params.subscribe((params: Params ) =>{
+//   this.user.id = params.id;
+//   this.user.name = params.name;
+// })
+// //get active route Query parameters with observeble subscription
+// import { Subscription } from 'rxjs/Subscription';
+// queryParamSubscription: Subscription;
+// this.queryParamSubscription = this.activatedRoute.queryParams.subscribe((params: Params ) =>{
+//   this.user.id = params.id;
+//   this.user.name = params.name;
+// })
+// ngOnDestroy(): void {this.paramSubscription.unsubscribe();}
